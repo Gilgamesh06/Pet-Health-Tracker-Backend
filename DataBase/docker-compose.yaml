@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_DB=pet_shop_test
+      - POSTGRES_USER=test 
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres-data-pet_shop_test:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d 
+    networks:
+      - test_network
+
+volumes:
+  postgres-data-pet_shop_test:
+
+networks:
+  test_network:
+    driver: bridge
+
+
