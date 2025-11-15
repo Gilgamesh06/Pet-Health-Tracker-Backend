@@ -2,13 +2,24 @@ CREATE TABLE persona(
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
     apellido VARCHAR(255) NOT NULL,
-    fecha_nacimiento DATE NOT NULL
+    fecha_nacimiento DATE NOT NULL,
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL  -- Activo o Inactivo
 );
 
 CREATE TABLE usuario(
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL,  -- Activo o Inactivo
+
     persona_id INT NOT NULL UNIQUE,
 
     CONSTRAINT fk_persona_p FOREIGN KEY(persona_id) REFERENCES persona(id)
@@ -22,6 +33,12 @@ CREATE TABLE mascota(
     fecha_nacimiento DATE NOT NULL,
     peso NUMERIC(5,2) NOT NULL,
     foto VARCHAR(255),
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL,  -- Activo o Inactivo
+
     usuario_id INT NOT NULL,
 
     CONSTRAINT fK_usuario_mas FOREIGN KEY(usuario_id) REFERENCES usuario(id)
@@ -30,7 +47,12 @@ CREATE TABLE mascota(
 CREATE TABLE comida(
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
-    descripcion VARCHAR(500) NOT NULL
+    descripcion VARCHAR(500) NOT NULL,
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL  -- Activo o Inactivo
 );
 
 -- Horario de alimentacion
@@ -40,6 +62,12 @@ CREATE TABLE horario(
     cantidad INT NOT NULL,
     dia_semana INT NOT NULL, -- 1 = Lunes, 2 = Martes, 3 = Miercoles, NULL 
     recordatorio BOOLEAN DEFAULT true,
+    
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL,  -- Activo o Inactivo
+    
     mascota_id INT NOT NULL,
     comida_id INT NOT NULL,
 
@@ -54,7 +82,13 @@ CREATE TABLE medicamento(
     tipo VARCHAR(20) CHECK (tipo IN ('VACUNA', 'DESPARASITANTE')) , -- Puede ser: vacuna o desparacitante
     fabricante VARCHAR(255) NOT NULL,
     intervalo_dosis INT NOT NULL,
-    descripcion TEXT NOT NULL
+    descripcion TEXT NOT NULL,
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL  -- Activo o Inactivo
+    
 );
 
 CREATE TABLE evento_salud(
@@ -62,9 +96,15 @@ CREATE TABLE evento_salud(
     tipo VARCHAR(50) NOT NULL, -- 'VACUNACION', 'DESPARACITACION', 'VISITA'
     fecha_realizacion DATE, --cuando se aplico (puede ser NULL si es programada)
     fecha_programada DATE, -- proxima vacuna / cita
-    estado VARCHAR(30) NOT NULL, -- 'PROGRAMADO', 'REALIZADO', 'CANCELADO'
+    estado_evento VARCHAR(30) NOT NULL, -- 'PROGRAMADO', 'REALIZADO', 'CANCELADO'
     notas VARCHAR(500),
     veterinario VARCHAR(255),
+
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL,  -- Activo o Inactivo
+
     mascota_id INT NOT NULL,
     medicamento_id INT, -- Puede ser NULL ya que manejamos visita aqui tambien
 
@@ -76,8 +116,14 @@ CREATE TABLE recordatorio(
     id SERIAL PRIMARY KEY,
     fecha_recordatorio TIMESTAMP NOT NULL,
     canal VARCHAR(20) NOT NULL, -- 'EMAIL', 'IN-APP'
-    estado VARCHAR(20) NOT NULL, -- PENDIENTE, ENVIADO, ERROR
+    estado_recordatorio VARCHAR(20) NOT NULL, -- PENDIENTE, ENVIADO, ERROR
     mensaje VARCHAR(500),
+    
+    fecha_creacion TIMESTAMP NOT NULL,
+    fecha_actualizacion TIMESTAMP,
+    fecha_eliminacion TIMESTAMP,
+    estado VARCHAR(20) NOT NULL,  -- Activo o Inactivo
+
     evento_salud_id INT,
     horario_id INT,
     usuario_id INT NOT NULL,
