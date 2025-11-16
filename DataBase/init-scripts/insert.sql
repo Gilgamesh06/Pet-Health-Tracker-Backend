@@ -14,6 +14,7 @@ INSERT INTO usuario (email, password, persona_id, fecha_creacion, fecha_actualiz
 ('maria@gmail.com', 'pass456', 2, NOW(), NULL, NULL, 'ACTIVO'),
 ('juan@gmail.com', 'pass789', 3, NOW(), NULL, NULL, 'ACTIVO');
 
+
 -- Entidad: Mascota
 INSERT INTO mascota (nombre, especie, raza, fecha_nacimiento, peso, foto, usuario_id,
                      fecha_creacion, fecha_actualizacion, fecha_eliminacion, estado) VALUES
@@ -73,3 +74,11 @@ INSERT INTO recordatorio (fecha_recordatorio, canal, estado_recordatorio, mensaj
  NULL, 1, 1, NOW(), NULL, NULL, 'ACTIVO'),
 ('2024-10-02 18:00:00', 'IN-APP', 'PENDIENTE', 'Alimentación programada para Firulais.',
  NULL, 2, 1, NOW(), NULL, NULL, 'ACTIVO');
+
+
+-- Entidad: Refresh Token
+INSERT INTO refresh_token (token, fecha_expiracion, fecha_revocado, revocado, usuario_id) VALUES 
+('abcd1234efgh5678ijkl9012', '2025-12-31 23:59:59', NULL, FALSE, 1),
+('mnop3456qrst7890uvwx2345', '2026-01-15 12:30:00', NULL, FALSE, 2),
+('yzab6789cdef0123ghij4567', '2025-11-20 18:00:00', '2025-11-15 10:00:00', TRUE, 1),
+('ijkl8901mnop2345qrst6789', '2025-10-31 15:45:30', NULL, FALSE, 3);
