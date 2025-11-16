@@ -21,11 +21,14 @@ public class RefreshToken {
     @Column(nullable = false)
     private String token;
 
-    @Column(nullable = false)
+    @Column(name = "fecha_expiracion",nullable = false)
     private Date fechaExpiracion;
 
-    @Column(nullable = false)
-    private Boolean tokenRevocado;
+    @Column(name = "fecha_revocado")
+    private Date fechaRevocado;
+
+    @Column(, nullable = false)
+    private Boolean revocado;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
@@ -33,8 +36,10 @@ public class RefreshToken {
 
     @PrePersist
     public void prePersist() {
-        if (tokenRevocado == null) {
-            tokenRevocado = false;
+        if (revocado == null) {
+            revocado = false;
         }
     }
+
+
 }
