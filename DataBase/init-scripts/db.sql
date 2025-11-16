@@ -133,3 +133,13 @@ CREATE TABLE recordatorio(
     CONSTRAINT fk_usuario_rec FOREIGN KEY(usuario_id) REFERENCES usuario(id)
 );
 
+CREATE TABLE resfresh_token(
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(500) NOT NULL,
+    fecha_expiracion TIMESTAMP NOT NULL,
+    fecha_revocado TIMESTAMP,
+    revocado BOOLEAN NOT NULL,
+    usuario_id INT NOT NULL,
+
+    CONSTRAINT fk_usuario_rt FOREIGN KEY(usuario_id) REFERENCES usuario(id)
+)
