@@ -6,9 +6,9 @@ import com.NoCountry.PetHealthTracker.model.entity.RefreshToken;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.RefreshTokenRepository;
 import com.NoCountry.PetHealthTracker.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import java.util.Date;
 
 @Service
@@ -61,11 +61,11 @@ public class RefreshTokenService {
     /**
      * Metodo para revocar Token invalida el token sin eliminarlo
      * @param token
-     * @param change
      */
-    public void setTokenRevocado(String token, boolean change){
+    public void setRevocarToken(String token){
         RefreshToken refreshToken = findByToken(token);
-        refreshToken.setTokenRevocado(change);
+        refreshToken.setRevocado(true);
+        refreshToken.setFechaRevocado(new Date());
         refreshTokenRepository.save(refreshToken);
     }
 
@@ -84,7 +84,7 @@ public class RefreshTokenService {
      * @return Boolean retorna true si el token es valido, false si no
      */
     public Boolean isValid(RefreshToken refreshToken){
-        return ( !isExpired(refreshToken) && !refreshToken.getTokenRevocado());
+        return ( !isExpired(refreshToken) && !refreshToken.getRevocado());
     }
 
 
