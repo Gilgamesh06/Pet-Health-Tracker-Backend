@@ -5,7 +5,7 @@
     * **Comandos para desplegar**
 
         ```bash
-            cd NoteAPP/Container
+            cd Pet-Health-Tracker-Backend/Container
             docker compose up --build
         ```
     * **Comando para listar contenedores activos**
