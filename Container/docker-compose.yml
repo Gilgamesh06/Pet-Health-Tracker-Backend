@@ -1,0 +1,39 @@
+services:
+
+  backend:
+    build:
+      context: ..
+      dockerfile: Container/Backend/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/pet_care
+      - SPRING_DATASOURCE_USERNAME=test
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_JWT_ACCESS_KEY=k9Y4tXovQ9QF7RwXzA8EYX4uOyscvWgEqg1b9zCqxmw=
+      - SPRING_JWT_TIME_EXPIRATION_ACCESS_KEY=900000
+      - SPRING_JWT_TIME_EXPIRATION_REFRESH_KEY=10800000
+    depends_on:
+      - db
+    networks:
+      - pet_care_network
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_DB=pet_care
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data-pet-care:/var/lib/postgresql/data
+    networks:
+      - pet_care_network
+
+volumes:
+  postgres-data-pet-care:
+
+networks:
+  pet_care_network:
+    driver: bridge
