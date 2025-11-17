@@ -3,6 +3,9 @@ package com.NoCountry.PetHealthTracker.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -21,7 +24,32 @@ public class Usuario extends AuditoriaModel {
 
     private String password;
 
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "usuario_rol",
+            joinColumns = @JoinColumn(name = "usuario_id")
+    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<Rol> roles = new HashSet<>();
+
+
     @OneToOne
     @JoinColumn(name = "persona_id", referencedColumnName = "id", unique = true, nullable = false)
     private Persona persona;
+
+    public enum Rol {
+        ADMIN,
+        USER,
+        MODERATOR,
+        GUEST
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (roles.isEmpty()) {
+            roles.add(Rol.USER);
+        }
+    }
 }
