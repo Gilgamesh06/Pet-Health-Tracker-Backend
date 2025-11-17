@@ -31,7 +31,7 @@ public class Usuario extends AuditoriaModel {
             joinColumns = @JoinColumn(name = "usuario_id")
     )
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
+    @Column(name = "rol")
     private Set<Rol> roles = new HashSet<>();
 
 
