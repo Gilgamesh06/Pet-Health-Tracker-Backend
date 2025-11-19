@@ -1,6 +1,6 @@
 # Despliegue
 
-* La app esta enpaquetada en contenedores docker y se genero un archivo `docker-compose.yml` para facilitar el despliegue.
+* La app esta empaquetada en contenedores docker y se genero un archivo `docker-compose.yml` para facilitar el despliegue.
 
     * **Comandos para desplegar**
 

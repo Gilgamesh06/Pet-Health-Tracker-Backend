@@ -27,7 +27,7 @@ public class RefreshToken {
     @Column(name = "fecha_revocado")
     private Date fechaRevocado;
 
-    @Column(, nullable = false)
+    @Column(nullable = false)
     private Boolean revocado;
 
     @ManyToOne

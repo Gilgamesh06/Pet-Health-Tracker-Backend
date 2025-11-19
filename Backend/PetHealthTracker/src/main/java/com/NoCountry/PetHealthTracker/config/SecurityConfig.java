@@ -33,7 +33,7 @@ public class SecurityConfig {
      * @param userDetailsService  clase que instancia de la interfaz UserDetailService que contiene el metodo que retorna un UserDetails
      * @param passwordEncoder metodo definido como un bean que encripta y desecritas la contraseña
      * @param jwtAuthenticationFilter Clase que contiene el metodo que verifica si la ruta es publica o priivada y si es privada verifica
-     *                                que el usuario este en el contexto de autenticacion de spring si no lo guarda en este
+     * que el usuario este en el contexto de autenticacion de spring si no lo guarda en este
      */
     public SecurityConfig(UserDetailsService userDetailsService,
                           PasswordEncoder passwordEncoder,

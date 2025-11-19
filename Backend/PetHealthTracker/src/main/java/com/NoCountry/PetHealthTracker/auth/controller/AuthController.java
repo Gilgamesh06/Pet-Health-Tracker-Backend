@@ -24,6 +24,7 @@ public class AuthController {
 
     public AuthController(AuthService authService,
                           RefreshTokenService refreshTokenService){
+
         this.authService = authService;
         this.refreshTokenService = refreshTokenService;
     }
