@@ -31,4 +31,8 @@ public class Medicamento extends AuditoriaModel{
 
     @Column(nullable = false)
     private String descripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
+    private Usuario usuario;
 }
