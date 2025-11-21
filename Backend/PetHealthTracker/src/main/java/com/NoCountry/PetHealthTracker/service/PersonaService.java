@@ -7,6 +7,8 @@ import com.NoCountry.PetHealthTracker.model.dto.UserInfoDTO;
 import com.NoCountry.PetHealthTracker.model.entity.Persona;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.PersonaRepository;
+import com.NoCountry.PetHealthTracker.service.interfaces.UpdateProcess;
+import com.NoCountry.PetHealthTracker.service.utility.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 
 @Service
-public class PersonaService {
+public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> {
 
     private final PersonaRepository personaRepository;
     private final UsuarioService usuarioService;
@@ -67,7 +69,7 @@ public class PersonaService {
      * @param email
      * @return UserInfoDTO
      */
-    private UserInfoDTO createUserInfo(Persona persona, String email){
+    private UserInfoDTO createUserInfo(Persona persona, String email) {
         return UserInfoDTO.builder()
                 .nombre(persona.getNombre())
                 .apellido(persona.getApellido())
@@ -76,14 +78,6 @@ public class PersonaService {
                 .build();
     }
 
-    /**
-     * Metod que valida si el String no es nulo y no esta vacio
-     * @param value
-     * @return boolean
-     */
-    private boolean isNotEmpty(String value) {
-        return value != null && !value.trim().isEmpty();
-    }
 
     /**
      * Metodo que actualiza los datos de Perona
@@ -91,16 +85,17 @@ public class PersonaService {
      * @param updatePersona DTO
      * @return Persona -> pueda haber sido actualizada o no
      */
-    private Persona updatePerson(Persona persona, UpdatePersonaDTO updatePersona) {
+    public Persona update(Persona persona, UpdatePersonaDTO updatePersona) {
         // verifica si se ha hecho alguna actualización
         boolean updated = false;
         LocalDateTime now = LocalDateTime.now();
 
-        if (isNotEmpty(updatePersona.getNombre())) {
+
+        if (StringUtils.isNotEmpty(updatePersona.getNombre())) {
             persona.setNombre(updatePersona.getNombre());
             updated = true;
         }
-        if (isNotEmpty(updatePersona.getApellido())) {
+        if (StringUtils.isNotEmpty(updatePersona.getApellido())) {
             persona.setApellido(updatePersona.getApellido());
             updated = true;
         }
@@ -126,7 +121,7 @@ public class PersonaService {
         Usuario user = usuarioService.getUserAuthenticated();
 
         // Actualiza los valores
-        Persona person = updatePerson(user.getPersona(), updatePersona);
+        Persona person = update(user.getPersona(), updatePersona);
 
          Persona persona = personaRepository.save(person);
 
