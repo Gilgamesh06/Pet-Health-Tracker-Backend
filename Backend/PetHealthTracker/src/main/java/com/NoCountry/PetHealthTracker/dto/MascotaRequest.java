@@ -1,4 +1,4 @@
-package com.NoCountry.PetHealthTracker.auth.dto;
+package com.NoCountry.PetHealthTracker.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,15 +13,15 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MascotaResponse {
+public class MascotaRequest {
 
-    private Long id;
     private String nombre;
     private String especie;
     private String raza;
     private LocalDate fechaNacimiento;
+    @Positive(message = "El peso debe ser mayor a 0")
     private Double peso;
     private String foto;
+    @NotNull(message = "El usuario es obligatorio")
     private Long idUsuario;
-
 }
