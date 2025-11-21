@@ -6,11 +6,14 @@ import com.NoCountry.PetHealthTracker.model.entity.RefreshToken;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.RefreshTokenRepository;
 import com.NoCountry.PetHealthTracker.repository.UsuarioRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
+@Slf4j
 @Service
 public class RefreshTokenService {
 
@@ -60,13 +63,16 @@ public class RefreshTokenService {
 
     /**
      * Metodo para revocar Token invalida el token sin eliminarlo
-     * @param token
+     * @param usuario
      */
-    public void setRevocarToken(String token){
-        RefreshToken refreshToken = findByToken(token);
-        refreshToken.setRevocado(true);
-        refreshToken.setFechaRevocado(new Date());
-        refreshTokenRepository.save(refreshToken);
+    public void setRevocarToken(Usuario usuario){
+        List<RefreshToken> refreshTokens = refreshTokenRepository.findAllByUsuarioAndRevocado(usuario, false);
+
+        refreshTokens.stream()
+                        .peek(refreshToken -> refreshToken.setRevocado(true))
+                        .peek(refreshToken -> refreshToken.setFechaRevocado(new Date()))
+                        .forEach(refreshTokenRepository::save);
+
     }
 
     /**
