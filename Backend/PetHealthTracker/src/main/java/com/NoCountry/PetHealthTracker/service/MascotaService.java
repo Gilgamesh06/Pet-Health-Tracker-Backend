@@ -1,7 +1,7 @@
 package com.NoCountry.PetHealthTracker.service;
 
-import com.NoCountry.PetHealthTracker.auth.dto.MascotaRequest;
-import com.NoCountry.PetHealthTracker.auth.dto.MascotaResponse;
+import com.NoCountry.PetHealthTracker.model.dto.MascotaRequest;
+import com.NoCountry.PetHealthTracker.model.dto.MascotaResponse;
 import com.NoCountry.PetHealthTracker.model.entity.Mascota;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.MascotaRepository;
@@ -10,9 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -112,6 +111,7 @@ public class MascotaService {
 
     /**
      * Eliminar una mascota
+     * No eliminaremos la mascota de la base de datos vamos a colocarla como inactiva solamente
      * @param id de la mascota a eliminar
      * @return Boolean para indicar si fue exitoso o no la eliminacion
      * @throws IllegalArgumentException en caso de que no se encuentre una mascota con el id indicado
@@ -120,13 +120,12 @@ public class MascotaService {
      */
     @Transactional
     public Boolean deleteById(Long id){
-
-        if(!mascotaRepository.existsById(id)){
-            throw new IllegalArgumentException("No se encontro mascota con el id:" + id);
-        }
-
-        mascotaRepository.deleteById(id);
-        return !mascotaRepository.existsById(id);
+        Mascota mascota = mascotaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("NO existe mascota con el id" + id));
+        mascota.setEstado("INACTIVO");
+        mascota.setFechaEliminacion(LocalDateTime.now());
+        mascotaRepository.save(mascota);
+        return true;
     }
 
     /**
@@ -136,7 +135,7 @@ public class MascotaService {
      */
     private MascotaResponse toResponse(Mascota mascota) {
         return MascotaResponse.builder()
-                .id(mascota.getID())
+                .id(mascota.getId())
                 .nombre(mascota.getNombre())
                 .especie(mascota.getEspecie())
                 .raza(mascota.getRaza())

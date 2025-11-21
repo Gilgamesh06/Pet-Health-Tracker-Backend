@@ -1,4 +1,4 @@
-package com.NoCountry.PetHealthTracker.dto;
+package com.NoCountry.PetHealthTracker.model.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

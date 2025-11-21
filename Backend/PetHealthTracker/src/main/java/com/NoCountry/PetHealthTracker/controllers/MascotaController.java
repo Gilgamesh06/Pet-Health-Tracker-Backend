@@ -1,7 +1,7 @@
 package com.NoCountry.PetHealthTracker.controllers;
 
-import com.NoCountry.PetHealthTracker.dto.MascotaRequest;
-import com.NoCountry.PetHealthTracker.dto.MascotaResponse;
+import com.NoCountry.PetHealthTracker.model.dto.MascotaRequest;
+import com.NoCountry.PetHealthTracker.model.dto.MascotaResponse;
 import com.NoCountry.PetHealthTracker.service.MascotaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

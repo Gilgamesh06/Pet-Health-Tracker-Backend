@@ -17,7 +17,7 @@ public class Mascota extends AuditoriaModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Long ID;
+    private Long id;
 
     @Column(nullable = false)
     private String nombre;

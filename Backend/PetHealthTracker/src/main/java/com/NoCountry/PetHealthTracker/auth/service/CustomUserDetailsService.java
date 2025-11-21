@@ -22,12 +22,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(()-> new UsernameNotFoundException("Usuario no encontrado: "+ email));
 
+        boolean enabled = usuario.getEstado().equalsIgnoreCase("ACTIVO");
+
         return org.springframework.security.core.userdetails.User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getPassword())
                 .roles(usuario.getRoles().stream()
                         .map(Usuario.Rol::name) // Se mapea el atributo name del Rol
                         .toArray(String[]::new))  // Lo convertimos en una arreglo de String[]
+                .disabled(!enabled)
                 .build();
     }
 }
