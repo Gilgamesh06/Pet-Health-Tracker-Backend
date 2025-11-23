@@ -1,5 +1,6 @@
 package com.NoCountry.PetHealthTracker.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.type.descriptor.java.LocalDateJavaType;
@@ -25,9 +26,11 @@ public class EventoSalud  extends AuditoriaModel {
     private String tipo;
 
     @Column(name = "fecha_realizacion")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime fechaRealizacion;
 
     @Column(name = "fecha_programada")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime fechaProgramada;
 
     @Column(name = "estado_evento", nullable = false)
