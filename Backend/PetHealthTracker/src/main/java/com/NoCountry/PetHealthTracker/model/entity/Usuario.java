@@ -50,7 +50,11 @@ public class Usuario extends AuditoriaModel {
 
     @PrePersist
     public void prePersist() {
-        if (roles.isEmpty()) {
+        super.prePersist();
+        if (roles == null) {
+            roles = new HashSet<>();
+        }
+        if (roles.isEmpty() ) {
             roles.add(Rol.USER);
         }
     }
