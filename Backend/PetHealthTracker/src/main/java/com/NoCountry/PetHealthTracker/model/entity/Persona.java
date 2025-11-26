@@ -22,6 +22,7 @@ public class Persona extends AuditoriaModel {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
     private String apellido;
 
     @Column(name = "fecha_nacimiento", nullable = false )
