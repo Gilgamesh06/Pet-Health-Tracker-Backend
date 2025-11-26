@@ -221,6 +221,7 @@ public class MedicamentoService  implements UpdateProcess<Medicamento, UpdateMed
         Medicamento medicamento = findById(id,user);
         medicamento.setEstado(estado);
         medicamento.setFechaEliminacion(now);
+        medicamentoRepository.save(medicamento);
 
         return  MessageDTO.builder()
                 .message("Medicamento:" +  medicamento.getNombre()  +"de Tipo: "+ medicamento.getTipo() + " eliminado exitosamente.")
