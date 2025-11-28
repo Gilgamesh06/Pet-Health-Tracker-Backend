@@ -37,13 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-
-    private static final Set<String> EXCLUDED_PATHS = Set.of(
-            "/auth/login",
-            "/auth/register",
-            "/auth/refresh"
-    );
-
+    
     /**
      * Metodo que recibe la peticion http y por medio del header determina si es una peticion
      * a un endpoint publico o que requiere autenticacion si es publico retorna para seguir la cadena de
@@ -61,10 +55,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                      HttpServletResponse response,
                                      FilterChain filterChain) throws ServletException, IOException {
 
-        String path = request.getServletPath();
+        String path = request.getRequestURI();
 
-        // ⛔ EXCLUIR ENDPOINTS PÚBLICOS
-        if (EXCLUDED_PATHS.contains(path)) {
+        // Excluir rutas públicas
+        if (path.startsWith("/auth/")) {
             filterChain.doFilter(request, response);
             return;
         }
