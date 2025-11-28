@@ -1,4 +1,4 @@
-package com.NoCountry.PetHealthTracker.controllers;
+package com.NoCountry.PetHealthTracker.controller;
 
 import com.NoCountry.PetHealthTracker.model.dto.MascotaRequest;
 import com.NoCountry.PetHealthTracker.model.dto.MascotaResponse;
@@ -23,11 +23,12 @@ public class MascotaController {
 
     /**
      * Endpoint para obtener todas las mascotas registradas por un usuario
+     *
      * @param id identificador del usuario
      * @return ResponseEntity con estdo 200 y una lista de {@link MascotaResponse} con todas las mascotas registradas
      */
     @GetMapping(path = "/all/{id}")
-    public ResponseEntity<List<MascotaResponse>> getAllMascotas(@PathVariable("id") Long id){
+    public ResponseEntity<List<MascotaResponse>> getAllMascotas(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(mascotaService.getAll(id));
     }
 
@@ -65,7 +66,7 @@ public class MascotaController {
      * @return ResponseEntity con estado 200 y {@link MascotaResponse} con los datos ya actualizas en la base de datos
      */
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<MascotaResponse> updateMascotaById(@PathVariable Long id,
+    public ResponseEntity<MascotaResponse> updateMascotaById(@PathVariable(value = "id") Long id,
                                                              @Valid @RequestBody MascotaRequest request) {
         MascotaResponse response = mascotaService.updateById(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -76,11 +77,11 @@ public class MascotaController {
      * Endpoint para eliminar una mascota
      *
      * @param id extraido de la url para eliminar una mascota
-     * @return ResponseEntity con estado 204 sin body
+     * @return ResponseEntity con estado 200 si se elimina el resgistro correctamente
      */
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<Boolean> deleteMascotaById(@PathVariable(value = "id") Long id) {
         Boolean isDelete = mascotaService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(isDelete);
     }
 }
