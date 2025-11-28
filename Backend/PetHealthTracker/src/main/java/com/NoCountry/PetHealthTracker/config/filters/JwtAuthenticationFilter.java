@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Clase que extiende de la clase OncePerRequestFilter
@@ -36,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-
+    
     /**
      * Metodo que recibe la peticion http y por medio del header determina si es una peticion
      * a un endpoint publico o que requiere autenticacion si es publico retorna para seguir la cadena de
@@ -53,6 +54,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected  void doFilterInternal(HttpServletRequest request,
                                      HttpServletResponse response,
                                      FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // Excluir rutas públicas
+        if (path.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // se obtiene el encabezado de la peticion http que contiene Autorization
         final String authHeader = request.getHeader("Authorization");
         // se crean las variables que va almacenar el token y el nickname del usuario

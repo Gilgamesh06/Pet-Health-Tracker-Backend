@@ -22,7 +22,7 @@ public class MedicamentoController {
      * @param register DTO -> contiene la informacion a guardar
      * @return MedicamentoInfoDTO and StatusCode 201 CREATED
      */
-    @PutMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<MedicamentoInfoDTO> save(@RequestBody RegisterMedicamentoDTO register){
         MedicamentoInfoDTO medicamento = medicamentoService.saveMedicamento(register);
         return new ResponseEntity<>(medicamento, HttpStatus.CREATED);

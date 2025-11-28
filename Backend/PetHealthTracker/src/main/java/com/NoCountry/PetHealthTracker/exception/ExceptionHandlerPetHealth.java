@@ -20,13 +20,4 @@ public class ExceptionHandlerPetHealth {
     }
 
 
-    /**
-     * Manejamos cualquier exception
-     * @param e contiene el mensaje de error
-     * @return ResponseEntity con estado http 500 y un mesaje personalizado
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> generalError(Exception e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error intente mas tarde");
-    }
 }

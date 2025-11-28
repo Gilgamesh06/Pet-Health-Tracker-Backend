@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.Optional;
 
 @Service
 public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> {
@@ -46,8 +47,29 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @return Persona  -> guardada
      */
     public Persona savePersona(RegisterDTO register) {
-        Persona persona = createObjectPersona(register);
-        return personaRepository.save(persona);
+        Optional<Usuario> usuarioOpt = usuarioService.getUserByEmail(register.getEmail());
+        if(usuarioOpt.isPresent()){
+            // Validamos que el usuario y persona esten activos
+            String estado = "ACTIVO";
+            Usuario usuario = usuarioOpt.get();
+            if(usuario.getEstado().equals(estado) && usuario.getPersona().getEstado().equals(estado) ){
+                throw new RuntimeException("Usuario ya existe");
+            }
+            else{
+                // Si existen pero no estan activos actualizamos la informacion y cambiamos el estado y fecha actualizacion.
+                Persona persona = usuario.getPersona();
+                persona.setNombre(register.getNombre());
+                persona.setApellido(register.getApellido());
+                persona.setFechaNacimiento(register.getFechaNacimiento());
+                persona.setFechaActualizacion(LocalDateTime.now());
+                persona.setEstado(estado);
+                return personaRepository.save(persona);
+            }
+        }
+        else{
+            Persona persona = createObjectPersona(register);
+            return personaRepository.save(persona);
+        }
     }
 
     /**
@@ -159,6 +181,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
         Persona persona = user.getPersona();
         persona.setEstado(estado);
         persona.setFechaEliminacion(now);
+        personaRepository.save(persona);
 
         return  MessageDTO.builder()
                 .message("Usuario:" +  persona.getNombre() + persona.getApellido() + " eliminado exitosamente.")

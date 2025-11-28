@@ -88,13 +88,25 @@ public class UsuarioService {
      * @return Usuario objeto creado a partir del DTO y Persona
      */
     public Usuario saveUsuario(RegisterDTO register, Persona persona){
-
         Optional<Usuario> usuarioOpt = getUserByEmail(register.getEmail());
-        if(usuarioOpt.isEmpty()){
+        if(usuarioOpt.isPresent()) {
+            // Validamos que el usuario y persona esten activos
+            String estado = "ACTIVO";
+            Usuario usuario = usuarioOpt.get();
+            if (usuario.getEstado().equals(estado) && usuario.getPersona().getEstado().equals(estado)) {
+                throw new RuntimeException("Usuario ya existe");
+            }
+            else{
+                // Si existen pero no estan activos actualizamos la informacion y cambiamos el estado y fecha actualizacion.
+                usuario.setPassword(passwordEncoder.encode(register.getPassword()));
+                usuario.setFechaActualizacion(LocalDateTime.now());
+                usuario.setEstado(estado);
+                return usuarioRepository.save(usuario);
+            }
+        }
+        else{
             Usuario usuario = createObjectUsuario(register, persona);
             return usuarioRepository.save(usuario);
-        }else{
-            throw new RuntimeException("Usuario ya registrado");
         }
     }
 
