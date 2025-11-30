@@ -1,6 +1,7 @@
 package com.NoCountry.PetHealthTracker.service;
 
 import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.exception.user.UsuarioExistenteException;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UpdatePersonaDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UserInfoDTO;
@@ -9,6 +10,7 @@ import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.PersonaRepository;
 import com.NoCountry.PetHealthTracker.service.interfaces.UpdateProcess;
 import com.NoCountry.PetHealthTracker.service.utility.StringUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -53,7 +55,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
             String estado = "ACTIVO";
             Usuario usuario = usuarioOpt.get();
             if(usuario.getEstado().equals(estado) && usuario.getPersona().getEstado().equals(estado) ){
-                throw new RuntimeException("Usuario ya existe");
+                throw new UsuarioExistenteException("El usuario ya existe y está activo.");
             }
             else{
                 // Si existen pero no estan activos actualizamos la informacion y cambiamos el estado y fecha actualizacion.
@@ -137,6 +139,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @param updatePersona DTO
      * @return UserInfoDTO
      */
+    @Transactional
     public UserInfoDTO updatePersona(UpdatePersonaDTO updatePersona){
 
         // Obtiene el usuario del contexto
@@ -169,21 +172,18 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * Metodo para eliminar un usuario
      * @return MessageDTO
      */
-    public MessageDTO delete(){
+    @Transactional
+    public MessageDTO delete(Usuario user){
 
         String estado = "INACTIVO";
         LocalDateTime now = LocalDateTime.now();
 
-        // Obtiene el usuario del contexto
-        Usuario user = usuarioService.getUserAuthenticated();
-        user.setEstado(estado);
-        user.setFechaEliminacion(now);
         Persona persona = user.getPersona();
         persona.setEstado(estado);
         persona.setFechaEliminacion(now);
         personaRepository.save(persona);
 
-        return  MessageDTO.builder()
+        return MessageDTO.builder()
                 .message("Usuario:" +  persona.getNombre() + persona.getApellido() + " eliminado exitosamente.")
                 .build();
     }
