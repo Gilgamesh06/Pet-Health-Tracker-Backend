@@ -6,6 +6,7 @@ import com.NoCountry.PetHealthTracker.auth.dto.TokenDTO;
 import com.NoCountry.PetHealthTracker.auth.dto.TokenRefreshRequest;
 import com.NoCountry.PetHealthTracker.auth.service.AuthService;
 import com.NoCountry.PetHealthTracker.auth.service.RefreshTokenService;
+import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -32,12 +33,12 @@ public class AuthController {
     /**
      * Metodo para registrar al usuario
      * @param register DTO: que contiene la informacion para registrar al usaurio
-     * @return retorna por el momento el usuario y un statuscode 201
+     * @return retorna MessageDTO y un statuscode 201
      */
     @PostMapping("/register")
-    public ResponseEntity<Usuario> register(@Valid @RequestBody RegisterDTO register){
-        Usuario usuario = authService.registerUser(register);
-        return new ResponseEntity<>(usuario, HttpStatus.CREATED);
+    public ResponseEntity<MessageDTO> register(@Valid @RequestBody RegisterDTO register){
+        MessageDTO message = authService.registerUser(register);
+        return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
 
     /**
