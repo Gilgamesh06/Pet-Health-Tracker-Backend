@@ -1,11 +1,14 @@
 package com.NoCountry.PetHealthTracker.service;
 
+import com.NoCountry.PetHealthTracker.exception.medicamento.MedicamentoExistenteException;
+import com.NoCountry.PetHealthTracker.exception.medicamento.MedicamentoNotFoundException;
 import com.NoCountry.PetHealthTracker.model.dto.*;
 import com.NoCountry.PetHealthTracker.model.entity.Medicamento;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.MedicamentoRepository;
 import com.NoCountry.PetHealthTracker.service.interfaces.UpdateProcess;
 import com.NoCountry.PetHealthTracker.service.utility.StringUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -76,7 +79,7 @@ public class MedicamentoService  implements UpdateProcess<Medicamento, UpdateMed
                 intervaloDosis
                 ,usuario);
         if(medicamentoOpt.isPresent()){
-            throw new RuntimeException("El medicamento ya existe.");
+            throw new MedicamentoExistenteException("El medicamento ya existe.");
         }
     }
 
@@ -89,7 +92,7 @@ public class MedicamentoService  implements UpdateProcess<Medicamento, UpdateMed
     protected Medicamento findById(Long id, Usuario usuario){
         Optional<Medicamento> medicamentoOpt = medicamentoRepository.findByIdAndUsuario(id,usuario);
         if(medicamentoOpt.isEmpty()){
-            throw new RuntimeException("Medicamento no encontrado");
+            throw new MedicamentoNotFoundException("Medicamento no encontrado");
         }
         else{
             return medicamentoOpt.get();
@@ -193,6 +196,7 @@ public class MedicamentoService  implements UpdateProcess<Medicamento, UpdateMed
      * @param updateMedicamento
      * @return MedicamentoInfoDTO
      */
+    @Transactional
     public MedicamentoInfoDTO updateMedicamento(Long id, UpdateMedicamentoDTO updateMedicamento){
 
         // Obtengo el usuario authenticado
@@ -210,6 +214,7 @@ public class MedicamentoService  implements UpdateProcess<Medicamento, UpdateMed
      * @param id identificador de Medicamento
      * @return MessageDTO
      */
+    @Transactional
     public MessageDTO deleteMedicamento(Long id){
 
         String estado = "INACTIVO";
