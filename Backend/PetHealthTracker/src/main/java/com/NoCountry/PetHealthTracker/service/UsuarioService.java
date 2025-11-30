@@ -2,12 +2,16 @@ package com.NoCountry.PetHealthTracker.service;
 
 import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
 import com.NoCountry.PetHealthTracker.auth.service.RefreshTokenService;
+import com.NoCountry.PetHealthTracker.exception.user.EmailEqualsException;
+import com.NoCountry.PetHealthTracker.exception.user.PasswordEqualsException;
+import com.NoCountry.PetHealthTracker.exception.user.UsuarioExistenteException;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UpdateEmailDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UpdatePasswordDTO;
 import com.NoCountry.PetHealthTracker.model.entity.Persona;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,7 +98,7 @@ public class UsuarioService {
             String estado = "ACTIVO";
             Usuario usuario = usuarioOpt.get();
             if (usuario.getEstado().equals(estado) && usuario.getPersona().getEstado().equals(estado)) {
-                throw new RuntimeException("Usuario ya existe");
+                throw new UsuarioExistenteException("El usuario ya existe y está activo.");
             }
             else{
                 // Si existen pero no estan activos actualizamos la informacion y cambiamos el estado y fecha actualizacion.
@@ -116,13 +120,14 @@ public class UsuarioService {
      * @param updatePassword DTO -> contiene la nueva contraseña
      * @return MessageDTO respuesta en formato JSON
      */
+    @Transactional
     public MessageDTO changePassword(UpdatePasswordDTO updatePassword){
 
         // Obtiene el usuario del contexto
         Usuario user = getUserAuthenticated();
 
         if(user.getPassword().equals(updatePassword.getPassword())){
-            throw new RuntimeException("La contraseña no puede ser la misma.");
+            throw new PasswordEqualsException("La contraseña no puede ser la misma.");
         }
         else{
             // Codifica la contraseña
@@ -145,6 +150,7 @@ public class UsuarioService {
      * @param updateEmail DTO -> Contiene el nuevo correo
      * @return MessageDTO respuesta en formato JSON
      */
+    @Transactional
     public MessageDTO changeEmail(UpdateEmailDTO updateEmail){
 
         // Obtiene el usuario del contexto
@@ -152,7 +158,7 @@ public class UsuarioService {
 
         // verifica si el email es el mismo
         if( user.getEmail().equals(updateEmail.getEmail())){
-            throw new RuntimeException("El correo no puede ser el mismo.");
+            throw new EmailEqualsException("El correo no puede ser el mismo.");
         }
         else{
             user.setEmail(updateEmail.getEmail());
@@ -168,5 +174,25 @@ public class UsuarioService {
                     .build();
         }
 
+    }
+
+
+    /**
+     * Metodo para eliminar a Usuario
+     * @return Usuario
+     */
+    @Transactional
+    public Usuario delete(){
+
+        String estado = "INACTIVO";
+        LocalDateTime now = LocalDateTime.now();
+
+        // Obtiene el usuario del contexto
+        Usuario user = getUserAuthenticated();
+
+        user.setEstado(estado);
+        user.setFechaEliminacion(now);
+
+        return usuarioRepository.save(user);
     }
 }
