@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Set;
 
 /**
  * Clase que extiende de la clase OncePerRequestFilter
@@ -37,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-    
+
     /**
      * Metodo que recibe la peticion http y por medio del header determina si es una peticion
      * a un endpoint publico o que requiere autenticacion si es publico retorna para seguir la cadena de
