@@ -1,6 +1,7 @@
 package com.NoCountry.PetHealthTracker.controller;
 
 import com.NoCountry.PetHealthTracker.model.dto.*;
+import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.service.PersonaService;
 import com.NoCountry.PetHealthTracker.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -69,7 +70,8 @@ public class UserController {
      */
     @DeleteMapping("/delete")
     public ResponseEntity<MessageDTO> deleteUser(){
-        MessageDTO message = personaService.delete();
+        Usuario user = usuarioService.delete();
+        MessageDTO message = personaService.delete(user);
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
