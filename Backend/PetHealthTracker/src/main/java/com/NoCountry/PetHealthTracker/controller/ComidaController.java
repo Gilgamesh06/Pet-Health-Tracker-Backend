@@ -72,7 +72,7 @@ public class ComidaController {
      * @return ResponseEntity con estado 200 si se elimina el resgistro correctamente
      */
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Boolean> deleteById(@PathVariable(value = "id") Long id) {
         Boolean isDelete = comidaService.deleteById(id);
         return ResponseEntity.ok(isDelete);
     }
