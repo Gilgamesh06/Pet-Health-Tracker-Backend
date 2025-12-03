@@ -34,6 +34,9 @@ public class UsuarioService {
         this.refreshTokenService = refreshTokenService;
         this.passwordEncoder = passwordEncoder;
     }
+    public Usuario findById(Long id){
+        return usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("El usuario no existe o es invalido"));
+    }
 
     /**
      * Metodo que busca un usuario a partir de su Email

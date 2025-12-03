@@ -1,5 +1,6 @@
 package com.NoCountry.PetHealthTracker.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Recordatorio extends AuditoriaModel {
     private Long id;
 
     @Column(name = "fecha_recordatorio", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime fechaRecordatorio;
 
     @Column(nullable = false)
