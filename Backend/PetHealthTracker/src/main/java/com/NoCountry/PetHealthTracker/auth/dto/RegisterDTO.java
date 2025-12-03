@@ -19,6 +19,7 @@ public class RegisterDTO {
     @NotBlank(message = "El nombre no puede estar vacio.")
     private String nombre;
 
+    @NotBlank(message = "El nombre no puede estar vacio.")
     private String apellido;
 
     @NotNull(message = "La fecha de nacimiento no puede ser nula.")

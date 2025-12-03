@@ -3,6 +3,7 @@ package com.NoCountry.PetHealthTracker.auth.service;
 import com.NoCountry.PetHealthTracker.auth.dto.LoginDTO;
 import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
 import com.NoCountry.PetHealthTracker.auth.dto.TokenDTO;
+import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.entity.Persona;
 import com.NoCountry.PetHealthTracker.model.entity.RefreshToken;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
@@ -40,11 +41,15 @@ public class AuthService {
     /**
      * Metodo para registar el usarioo
      * @param register DTO que contiene la informacion para registar al usaurio
-     * @return retorna un Usuario (temploral -> cambiar a DTO )
+     * @return retorna un MessageDTO
      */
-    public Usuario registerUser(RegisterDTO register){
+    public MessageDTO registerUser(RegisterDTO register){
         Persona persona = personaService.savePersona(register);
-        return usuarioService.saveUsuario(register, persona);
+        usuarioService.saveUsuario(register, persona);
+
+        return MessageDTO.builder()
+                .message("Usuario:" +  persona.getNombre() + persona.getApellido() + " registrado exitosamente.")
+                .build();
     }
 
 

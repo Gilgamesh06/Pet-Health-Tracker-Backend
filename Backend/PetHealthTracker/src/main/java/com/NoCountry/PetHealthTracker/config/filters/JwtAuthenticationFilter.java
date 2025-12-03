@@ -53,6 +53,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected  void doFilterInternal(HttpServletRequest request,
                                      HttpServletResponse response,
                                      FilterChain filterChain) throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+
+        // Excluir rutas públicas
+        if (path.startsWith("/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // se obtiene el encabezado de la peticion http que contiene Autorization
         final String authHeader = request.getHeader("Authorization");
         // se crean las variables que va almacenar el token y el nickname del usuario

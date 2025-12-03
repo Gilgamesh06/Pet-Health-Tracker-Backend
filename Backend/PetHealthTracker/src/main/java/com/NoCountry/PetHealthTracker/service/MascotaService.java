@@ -6,6 +6,7 @@ import com.NoCountry.PetHealthTracker.model.entity.Mascota;
 import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.MascotaRepository;
 import com.NoCountry.PetHealthTracker.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class MascotaService {
      */
     public MascotaResponse getById(Long id){
         Mascota mascota = mascotaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No existe la mascota con el id" + id));
+                .orElseThrow(() -> new EntityNotFoundException("No existe la mascota con el id " + id));
         return toResponse(mascota);
     }
 
@@ -55,7 +56,7 @@ public class MascotaService {
      * Guarda una mascota en la base de datos
      * @param request dto con los datos necesarios para crear la mascota
      * @return MascotaRespose con los datos de la mascota guardada y su id generado por la base de datos
-     * @throws IllegalArgumentException si request no tiene el id de un usuario valido en idUsuario
+     * @throws EntityNotFoundException si request no tiene el id de un usuario valido en idUsuario
      * la anotacion @transational se asegura de que hibernate haga el commit si no ocurre un error
      * si no hara un rollback.
      */
@@ -64,11 +65,11 @@ public class MascotaService {
 
 
         if (request.getIdUsuario() == null) {
-            throw new IllegalArgumentException("La request no tiene usuario valido");
+            throw new EntityNotFoundException("La request no tiene usuario valido");
         }
 
         Usuario usuario = usuarioRepository.findById(request.getIdUsuario())
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Mascota mascota = Mascota.builder()
                 .nombre(request.getNombre())
@@ -90,7 +91,7 @@ public class MascotaService {
      * @param id es el id de la mascota actualizar
      * @param request trae los datos que se van actualizar
      * @return MascotaResponse con los datos ya actualizados
-     * @throws IllegalArgumentException
+     * @throws EntityNotFoundException
      * la anotacion @transational se asegura de que hibernate haga el commit
      * si no ocurre un error si no hara un rollback.
      */
@@ -98,7 +99,7 @@ public class MascotaService {
     public MascotaResponse updateById(Long id, MascotaRequest request) {
 
         Mascota mascotaBD = mascotaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontro mascota con el id:" + id));
+                .orElseThrow(() -> new EntityNotFoundException("No se encontro mascota con el id:" + id));
 
         mascotaBD.setNombre(request.getNombre());
         mascotaBD.setEspecie(request.getEspecie());
@@ -114,14 +115,14 @@ public class MascotaService {
      * No eliminaremos la mascota de la base de datos vamos a colocarla como inactiva solamente
      * @param id de la mascota a eliminar
      * @return Boolean para indicar si fue exitoso o no la eliminacion
-     * @throws IllegalArgumentException en caso de que no se encuentre una mascota con el id indicado
+     * @throws EntityNotFoundException en caso de que no se encuentre una mascota con el id indicado
      * la anotacion @transactional asegura que hibernate hago un commit automatico si la eliminacion es exitosa
      * si ocurre un error realizara u rollback
      */
     @Transactional
     public Boolean deleteById(Long id){
         Mascota mascota = mascotaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("NO existe mascota con el id" + id));
+                .orElseThrow(() -> new EntityNotFoundException("NO existe mascota con el id" + id));
         mascota.setEstado("INACTIVO");
         mascota.setFechaEliminacion(LocalDateTime.now());
         mascotaRepository.save(mascota);

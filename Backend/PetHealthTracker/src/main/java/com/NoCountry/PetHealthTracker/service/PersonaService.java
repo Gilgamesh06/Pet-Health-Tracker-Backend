@@ -1,6 +1,7 @@
 package com.NoCountry.PetHealthTracker.service;
 
 import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.exception.user.UsuarioExistenteException;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UpdatePersonaDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UserInfoDTO;
@@ -9,11 +10,13 @@ import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.repository.PersonaRepository;
 import com.NoCountry.PetHealthTracker.service.interfaces.UpdateProcess;
 import com.NoCountry.PetHealthTracker.service.utility.StringUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.Optional;
 
 @Service
 public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> {
@@ -46,8 +49,29 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @return Persona  -> guardada
      */
     public Persona savePersona(RegisterDTO register) {
-        Persona persona = createObjectPersona(register);
-        return personaRepository.save(persona);
+        Optional<Usuario> usuarioOpt = usuarioService.getUserByEmail(register.getEmail());
+        if(usuarioOpt.isPresent()){
+            // Validamos que el usuario y persona esten activos
+            String estado = "ACTIVO";
+            Usuario usuario = usuarioOpt.get();
+            if(usuario.getEstado().equals(estado) && usuario.getPersona().getEstado().equals(estado) ){
+                throw new UsuarioExistenteException("El usuario ya existe y está activo.");
+            }
+            else{
+                // Si existen pero no estan activos actualizamos la informacion y cambiamos el estado y fecha actualizacion.
+                Persona persona = usuario.getPersona();
+                persona.setNombre(register.getNombre());
+                persona.setApellido(register.getApellido());
+                persona.setFechaNacimiento(register.getFechaNacimiento());
+                persona.setFechaActualizacion(LocalDateTime.now());
+                persona.setEstado(estado);
+                return personaRepository.save(persona);
+            }
+        }
+        else{
+            Persona persona = createObjectPersona(register);
+            return personaRepository.save(persona);
+        }
     }
 
     /**
@@ -115,6 +139,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @param updatePersona DTO
      * @return UserInfoDTO
      */
+    @Transactional
     public UserInfoDTO updatePersona(UpdatePersonaDTO updatePersona){
 
         // Obtiene el usuario del contexto
@@ -147,20 +172,18 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * Metodo para eliminar un usuario
      * @return MessageDTO
      */
-    public MessageDTO delete(){
+    @Transactional
+    public MessageDTO delete(Usuario user){
 
         String estado = "INACTIVO";
         LocalDateTime now = LocalDateTime.now();
 
-        // Obtiene el usuario del contexto
-        Usuario user = usuarioService.getUserAuthenticated();
-        user.setEstado(estado);
-        user.setFechaEliminacion(now);
         Persona persona = user.getPersona();
         persona.setEstado(estado);
         persona.setFechaEliminacion(now);
+        personaRepository.save(persona);
 
-        return  MessageDTO.builder()
+        return MessageDTO.builder()
                 .message("Usuario:" +  persona.getNombre() + persona.getApellido() + " eliminado exitosamente.")
                 .build();
     }
