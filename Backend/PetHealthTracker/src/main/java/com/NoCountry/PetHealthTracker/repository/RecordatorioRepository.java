@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 
 public interface RecordatorioRepository extends JpaRepository<Recordatorio,Long> {
 
-    Page<Recordatorio>findByFechaProgramadaBetweenAndUsuario(LocalDateTime inicio, LocalDateTime fin, Usuario usuario, Pageable pageable);
+    Page<Recordatorio>findByFechaRecordatorioBetweenAndUsuario(LocalDateTime inicio, LocalDateTime fin, Usuario usuario, Pageable pageable);
 
 }
