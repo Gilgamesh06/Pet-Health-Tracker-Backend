@@ -1,11 +1,10 @@
 package com.NoCountry.PetHealthTracker.auth.dto;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class LoginDTO {
+public class LoginRequest {
 
     @NotBlank(message = "el correo no puede ser vacio")
     @Email(message = "debe tener formato de correo")

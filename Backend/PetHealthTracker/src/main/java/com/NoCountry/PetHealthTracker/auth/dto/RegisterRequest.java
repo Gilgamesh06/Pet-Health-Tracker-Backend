@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @Builder
-public class RegisterDTO {
+public class RegisterRequest {
 
     @NotBlank(message = "El nombre no puede estar vacio.")
     private String nombre;

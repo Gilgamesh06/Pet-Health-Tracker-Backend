@@ -37,7 +37,7 @@ public class Mascota extends AuditoriaModel {
     private String foto;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = true)
     private Usuario usuario;
 
 }

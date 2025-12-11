@@ -1,13 +1,12 @@
 package com.NoCountry.PetHealthTracker.auth.controller;
 
-import com.NoCountry.PetHealthTracker.auth.dto.LoginDTO;
-import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.auth.dto.LoginRequest;
+import com.NoCountry.PetHealthTracker.auth.dto.RegisterRequest;
 import com.NoCountry.PetHealthTracker.auth.dto.TokenDTO;
 import com.NoCountry.PetHealthTracker.auth.dto.TokenRefreshRequest;
 import com.NoCountry.PetHealthTracker.auth.service.AuthService;
 import com.NoCountry.PetHealthTracker.auth.service.RefreshTokenService;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
-import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,7 @@ public class AuthController {
      * @return retorna MessageDTO y un statuscode 201
      */
     @PostMapping("/register")
-    public ResponseEntity<MessageDTO> register(@Valid @RequestBody RegisterDTO register){
+    public ResponseEntity<MessageDTO> register(@Valid @RequestBody RegisterRequest register){
         MessageDTO message = authService.registerUser(register);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
@@ -47,7 +46,7 @@ public class AuthController {
      * @return retorna el DTO TokenDTO que contiene el token de aceso y el de refresh
      */
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginDTO login){
+    public ResponseEntity<TokenDTO> login(@Valid @RequestBody LoginRequest login){
         TokenDTO tokenDTO = authService.loginUser(login);
         return new ResponseEntity<>(tokenDTO, HttpStatus.OK);
     }

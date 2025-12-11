@@ -1,6 +1,6 @@
 package com.NoCountry.PetHealthTracker.service;
 
-import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.auth.dto.RegisterRequest;
 import com.NoCountry.PetHealthTracker.auth.service.RefreshTokenService;
 import com.NoCountry.PetHealthTracker.exception.user.EmailEqualsException;
 import com.NoCountry.PetHealthTracker.exception.user.PasswordEqualsException;
@@ -80,7 +80,7 @@ public class UsuarioService {
      * @param persona Object -> relacion uno a uno
      * @return Usuario
      */
-    protected Usuario createObjectUsuario(RegisterDTO register, Persona persona){
+    protected Usuario createObjectUsuario(RegisterRequest register, Persona persona){
         return Usuario.builder()
                 .email(register.getEmail())
                 .password(passwordEncoder.encode(register.getPassword()))
@@ -94,7 +94,7 @@ public class UsuarioService {
      * @param persona Objet -> Persona que esta vinculado al usuario
      * @return Usuario objeto creado a partir del DTO y Persona
      */
-    public Usuario saveUsuario(RegisterDTO register, Persona persona){
+    public Usuario saveUsuario(RegisterRequest register, Persona persona){
         Optional<Usuario> usuarioOpt = getUserByEmail(register.getEmail());
         if(usuarioOpt.isPresent()) {
             // Validamos que el usuario y persona esten activos

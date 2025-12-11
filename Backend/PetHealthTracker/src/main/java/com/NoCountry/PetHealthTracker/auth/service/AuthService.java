@@ -1,12 +1,11 @@
 package com.NoCountry.PetHealthTracker.auth.service;
 
-import com.NoCountry.PetHealthTracker.auth.dto.LoginDTO;
-import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.auth.dto.LoginRequest;
+import com.NoCountry.PetHealthTracker.auth.dto.RegisterRequest;
 import com.NoCountry.PetHealthTracker.auth.dto.TokenDTO;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.entity.Persona;
 import com.NoCountry.PetHealthTracker.model.entity.RefreshToken;
-import com.NoCountry.PetHealthTracker.model.entity.Usuario;
 import com.NoCountry.PetHealthTracker.service.PersonaService;
 import com.NoCountry.PetHealthTracker.service.UsuarioService;
 import io.jsonwebtoken.Claims;
@@ -43,7 +42,7 @@ public class AuthService {
      * @param register DTO que contiene la informacion para registar al usaurio
      * @return retorna un MessageDTO
      */
-    public MessageDTO registerUser(RegisterDTO register){
+    public MessageDTO registerUser(RegisterRequest register){
         Persona persona = personaService.savePersona(register);
         usuarioService.saveUsuario(register, persona);
 
@@ -58,7 +57,7 @@ public class AuthService {
      * @param login DTO que contiene el email y la password del usuario
      * @return tokenDTO que contiene el token de acceso y el de refresco
      */
-    public TokenDTO loginUser(LoginDTO login){
+    public TokenDTO loginUser(LoginRequest login){
 
         // Aquí entra el AuthenticationProvider configurado
         Authentication auth = authenticationManager.authenticate(

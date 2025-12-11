@@ -1,6 +1,6 @@
 package com.NoCountry.PetHealthTracker.service;
 
-import com.NoCountry.PetHealthTracker.auth.dto.RegisterDTO;
+import com.NoCountry.PetHealthTracker.auth.dto.RegisterRequest;
 import com.NoCountry.PetHealthTracker.exception.user.UsuarioExistenteException;
 import com.NoCountry.PetHealthTracker.model.dto.MessageDTO;
 import com.NoCountry.PetHealthTracker.model.dto.UpdatePersonaDTO;
@@ -35,7 +35,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @param register DTO -> Contiene los datos de registro
      * @return Persona
      */
-    protected Persona createObjectPersona(RegisterDTO register) {
+    protected Persona createObjectPersona(RegisterRequest register) {
         return Persona.builder()
                 .nombre(register.getNombre())
                 .apellido(register.getApellido())
@@ -48,7 +48,7 @@ public class PersonaService implements UpdateProcess<Persona, UpdatePersonaDTO> 
      * @param register DTO
      * @return Persona  -> guardada
      */
-    public Persona savePersona(RegisterDTO register) {
+    public Persona savePersona(RegisterRequest register) {
         Optional<Usuario> usuarioOpt = usuarioService.getUserByEmail(register.getEmail());
         if(usuarioOpt.isPresent()){
             // Validamos que el usuario y persona esten activos
